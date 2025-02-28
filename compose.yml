@@ -1,0 +1,13 @@
+version: 'latest'
+services:
+  mongo:
+    image: mongo:latest
+    container_name: rubypome_mongo
+    ports:
+      - '127.0.0.1:27027:27017'
+    networks:
+      - rubypome
+
+networks:
+  rubypome:
+    driver: bridge
