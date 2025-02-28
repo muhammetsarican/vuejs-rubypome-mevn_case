@@ -1,6 +1,7 @@
 const express = require("express");
 const { config } = require("./config");
 const { startConn } = require("./loaders");
+const { auth } = require("./routes/auth");
 
 // ? dotenv using for get env vars
 config();
@@ -15,4 +16,14 @@ app.listen(PORT, () => {
     console.log(`app running on ${PORT}`);
     // ? db module starting
     startConn();
+
+    app.get("/", (req, res, next) => {
+        res.status(200).send({
+            success: true,
+            message: "welcome to rubypome, enjoy your journey."
+        })
+    })
+
+    // ? auth route
+    app.use("/auth", auth);
 });
