@@ -13,18 +13,27 @@ class UserRoute extends BaseRoute {
         super(UserController, schemas, UserRouter);
     }
 
+    // ? with this route you can reach your account without login
+    checkToken() {
+        this.Router.route("/check-token").get(this.Controller.checkToken());
+    }
+
+    // ? login method
     login() {
         this.Router.route("/login").post(validate(schemas.createValidation), this.Controller.login());
     }
 
+    // ? register method
     register() {
         this.Router.route("/register").post(this.Controller.register());
     }
 
+    // ? routes can add or remove from here
     IndexRoutes() {
+        this.checkToken();
         this.login();
         this.register();
-        return super.IndexRoutes();
+        return this.Router;
     }
 }
 
