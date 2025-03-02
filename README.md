@@ -5,9 +5,10 @@
 - General:
     - docker for prod
     - express for server
-    
+
 - Server:
     - mongoose for db
     - joi for validations
     - dotenv for env vars
+    - cryptojs for hashing vars
      
