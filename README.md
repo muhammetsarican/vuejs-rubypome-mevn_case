@@ -13,6 +13,10 @@
     - ***cryptojs** for hashing vars*
     - ***jsonwebtoken** for authentication*
 
+## 👌 Features
+- Auto login
+
+
 ## 🚀 Run Locally
 
 Clone the project
