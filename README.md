@@ -11,4 +11,4 @@
     - joi for validations
     - dotenv for env vars
     - cryptojs for hashing vars
-     
+    - jsonwebtoken for authentication     
