@@ -1,5 +1,6 @@
 const express = require("express");
-const { UserRoute } = require("./UserRoute");
+const { UserRoute } = require("./auth/UserRoute");
+const AppointmentRoute = require("./main/AppointmentRoute");
 
 const app = express();
 
@@ -11,5 +12,6 @@ app.get("/", (req, res, next) => {
 });
 
 app.use("/user", UserRoute.IndexRoutes());
+app.use("/appointment", AppointmentRoute.IndexRoutes());
 
 module.exports.auth = app;

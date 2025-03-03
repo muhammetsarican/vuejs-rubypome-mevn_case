@@ -1,7 +1,7 @@
 const express = require("express");
 const { config } = require("./config");
 const { startConn } = require("./loaders");
-const { auth } = require("./routes/auth");
+const { auth } = require("./routes");
 const errorHandler = require("./middlewares/errorHandler");
 
 // ? dotenv using for get env vars
@@ -26,7 +26,7 @@ app.listen(PORT, () => {
     })
 
     // ? auth route
-    app.use("/auth", auth);
+    app.use("/api", auth);
 
     // ? error handler for prevent down the server
     app.use(errorHandler);
