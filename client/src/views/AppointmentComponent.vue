@@ -34,7 +34,7 @@
         "
       >
         <option value="">Tarih Seçin</option>
-        <option v-for="s in slots" :key="s.date + s.time" :value="s.date">
+        <option v-for="s in _getSlots" :key="s.date + s.time" :value="s.date">
           {{ s.date }}
         </option>
       </select>
@@ -56,7 +56,7 @@
 
       <!-- Bad practice: No loading states or error handling -->
       <button
-        @click="save"
+        @click="onSubmit"
         style="
           width: 100%;
           padding: 10px;
@@ -83,71 +83,72 @@
       "
     >
       <h2 style="margin-bottom: 20px">Mevcut Randevular</h2>
-      <div
-        v-for="a in appointments"
-        :key="a.id"
-        style="padding: 10px; border-bottom: 1px solid #ddd"
-      >
-        {{ a.name }} - {{ a.date }} {{ a.time }}
+      <div v-if="_getAppointments && _getAppointments.length > 0">
+        <div
+          v-for="a in _getAppointments"
+          :key="a.id"
+          style="padding: 10px; border-bottom: 1px solid #ddd"
+        >
+          {{ a.name }} - {{ a.date }} {{ a.time }}
+        </div>
       </div>
+      <p v-else>Randevu bulunamadı...</p>
     </div>
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
       name: "",
       date: "",
       time: "",
-      slots: [],
-      appointments: [],
     };
   },
   computed: {
+    ...mapGetters(["_getAppointments", "_getSlots", "_getCurrentUser"]),
     filteredTimes() {
       if (!this.date) return [];
-      const temp = this.slots.filter((s) => s.date === this.date);
+      const temp = this._getSlots.filter((s) => s.date === this.date);
       console.log("filtered times:", temp);
       return temp;
     },
   },
 
   mounted() {
-    this.fetchData();
+    this.fetchAppointments();
     this.fetchSlots();
   },
   methods: {
-    async fetchData() {
-      const res = await fetch("http://localhost:4040/api/appointments");
-      const data = await res.json();
-      console.log("appointments:", data);
-      this.appointments = data;
+    fetchAppointments() {
+      if (!this._getCurrentUser) return;
+      this.$appAxios
+        .request(`/appointment/${this._getCurrentUser._id}`)
+        .then((response) => response.data)
+        .then((data) => this.$store.commit("setAppointments", data.message))
+        .catch((err) => console.log(err.message));
     },
-    async fetchSlots() {
-      const res = await fetch(
-        "http://localhost:4040/api/appointment/slot-appointments"
-      );
-      const data = await res.json();
-      console.log("slots:", data);
-      this.slots = data.message;
+    fetchSlots() {
+      this.$appAxios
+        .request("/appointment/slot-appointments")
+        .then((response) => response.data)
+        .then((data) => this.$store.commit("setSlots", data.message))
+        .catch((err) => console.log(err.message));
     },
-    async save() {
-      const res = await fetch("http://localhost:4040/api/appointments", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: this.name,
-          date: this.date,
-          time: this.time,
-        }),
-      });
-      const data = await res.json();
-      console.log("save response:", data);
-
-      location.reload();
+    onSubmit() {
+      if (!this._getCurrentUser) return;
+      this.$appAxios
+        .request(`/appointment/${this._getCurrentUser._id}`, {
+          method: "post",
+          data: {
+            date: this.date,
+            time: this.time,
+          },
+        })
+        .then((response) => response.data)
+        .then((data) => this.$store.commit("setAppointments", data.message))
+        .catch((err) => console.log(err.message));
     },
   },
 };
