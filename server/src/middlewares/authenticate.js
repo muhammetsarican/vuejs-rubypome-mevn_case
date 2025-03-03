@@ -37,11 +37,6 @@ module.exports.AuthenticateRefreshToken = (token, cb, res) => {
             return cb(new Error(err))
         };
 
-        let text = {
-            success: "",
-            message: ""
-        }
-
         const where = {
             _id: user._doc._id,
             status: user._doc.status,
@@ -56,8 +51,6 @@ module.exports.AuthenticateRefreshToken = (token, cb, res) => {
             return cb(new Error("User not found!"));
         }
 
-        text.success = true;
-        text.message = response;
-        return text;
+        return response;
     })
 }
