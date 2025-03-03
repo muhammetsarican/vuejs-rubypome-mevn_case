@@ -5,6 +5,7 @@
 - **General**:
     - ***docker** for prod*
     - ***express** for server*
+    - ***vue** for client*
 
 - **Server**:
     - ***mongoose** for db*
@@ -12,6 +13,10 @@
     - ***dotenv** for env vars*
     - ***cryptojs** for hashing vars*
     - ***jsonwebtoken** for authentication*
+    - ***cors** for managing requests*
+- **Client**:
+    - ***vue-router** for routing*
+    - ***axios** for fetching api*
 
 ## 🛸 Features
 - Auto login
@@ -71,7 +76,25 @@ Run server
   npm run dev
 ```
 
-#### Now, you can send requests to 4040 port, Congratulations 🎉
+Go to client directory
+
+```bash
+  cd client/
+```
+
+Then install the libs
+
+```bash
+  npm install
+```
+
+Run server
+
+```bash
+  npm run dev
+```
+
+#### Now, you can send requests to 4040 port and you can show ui from 5173 port, Congratulations 🎉
 
 ## 🌲 File Structure
 
@@ -79,6 +102,18 @@ Run server
 Rubypome/
 ├─ .gitignore
 ├─ README.md
+├─ client/
+│  ├─ .gitignore
+│  ├─ README.md
+│  ├─ index.html
+│  ├─ jsconfig.json
+│  ├─ package.json
+│  ├─ src/
+│  │  ├─ App.vue
+│  │  ├─ main.js
+│  │  ├─ router.js
+│  │  └─ views/
+│  └─ vite.config.js
 ├─ compose.yml
 └─ server/
    ├─ .env.example
@@ -87,6 +122,7 @@ Rubypome/
       ├─ app.js
       ├─ config/
       ├─ controllers/
+      ├─ helpers/
       ├─ loaders/
       ├─ middlewares/
       ├─ models/
