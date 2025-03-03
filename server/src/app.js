@@ -10,7 +10,14 @@ config();
 
 const app = express();
 
-app.use(cors());
+//? cors
+const corsOptions = {
+    origin: [`${process.env.CLIENT_ORIGIN}`],
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
+    credentials: true
+}
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // ? server initiated
