@@ -1,6 +1,5 @@
 # ⏰ MEVN Appointment Site
 
-
 ## 🔥 Used Techs:
 - **General**:
     - ***docker** for prod*
@@ -17,6 +16,7 @@
 - **Client**:
     - ***vue-router** for routing*
     - ***axios** for fetching api*
+    - ***vuex** for store*
 
 ## 🛸 Features
 - Auto login
@@ -112,6 +112,8 @@ Rubypome/
 │  │  ├─ App.vue
 │  │  ├─ main.js
 │  │  ├─ router.js
+│  │  ├─ store/
+│  │  ├─ utils/
 │  │  └─ views/
 │  └─ vite.config.js
 ├─ compose.yml
