@@ -3,12 +3,14 @@ const { config } = require("./config");
 const { startConn } = require("./loaders");
 const { auth } = require("./routes");
 const errorHandler = require("./middlewares/errorHandler");
+const cors = require("cors");
 
 // ? dotenv using for get env vars
 config();
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 // ? server initiated
