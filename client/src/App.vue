@@ -26,7 +26,7 @@ export default {
       .then((response) => response.data)
       .then((data) => {
         this.$store.commit("saveUser", data.message.user);
-        this.$$appAxios.setHeader(data.message.tokens.access_token);
+        this.$appAxios.setHeader(data.message.tokens.access_token);
       })
       .catch((err) => console.log(err.message));
   },
