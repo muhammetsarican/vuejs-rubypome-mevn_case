@@ -59,6 +59,12 @@ Go to server directory
   cd server/
 ```
 
+Then install the libs
+
+```bash
+  npm install
+```
+
 Run server
 
 ```bash
@@ -75,9 +81,7 @@ Rubypome/
 ├─ README.md
 ├─ compose.yml
 └─ server/
-   ├─ .env
    ├─ .env.example
-   ├─ package-lock.json
    ├─ package.json
    └─ src/
       ├─ app.js
