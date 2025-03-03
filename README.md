@@ -1,4 +1,4 @@
-# MEVN Appointment Site
+# ⏰ MEVN Appointment Site
 
 
 ## 🔥 Used Techs:
@@ -13,9 +13,8 @@
     - ***cryptojs** for hashing vars*
     - ***jsonwebtoken** for authentication*
 
-## 👌 Features
+## 🛸 Features
 - Auto login
-
 
 ## 🚀 Run Locally
 
@@ -67,6 +66,32 @@ Run server
 ```
 
 #### Now, you can send requests to 4040 port, Congratulations 🎉
+
+## 🌲 File Structure
+
+```bash
+Rubypome/
+├─ .gitignore
+├─ README.md
+├─ compose.yml
+└─ server/
+   ├─ .env
+   ├─ .env.example
+   ├─ package-lock.json
+   ├─ package.json
+   └─ src/
+      ├─ app.js
+      ├─ config/
+      ├─ controllers/
+      ├─ loaders/
+      ├─ middlewares/
+      ├─ models/
+      ├─ routes/
+      ├─ services/
+      ├─ utils/
+      └─ validations/
+```
+
 ## 🖋️ Authors
 
 - [@muhammetsarican](https://www.github.com/muhammetsarican)
