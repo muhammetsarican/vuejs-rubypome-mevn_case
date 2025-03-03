@@ -47,7 +47,8 @@
 
       <!-- Bad practice: No loading states or error handling -->
       <button
-        @click="save"
+        @click="onSubmit"
+        @disabled="isLoading"
         style="
           width: 100%;
           padding: 10px;
@@ -58,7 +59,7 @@
           cursor: pointer;
         "
       >
-        Oturum aç
+        {{ isLoading ? "loading..." : "Oturum Aç" }}
       </button>
     </div>
   </div>
@@ -69,44 +70,36 @@ export default {
     return {
       mail: "",
       password: "",
+      isLoading: false,
     };
   },
-
-  mounted() {
-    this.fetchData();
-    this.fetchSlots();
-  },
   methods: {
-    async fetchData() {
-      const res = await fetch("http://localhost:4040/api/appointments");
-      const data = await res.json();
-      console.log("appointments:", data);
-      this.appointments = data;
-    },
-    async fetchSlots() {
-      const res = await fetch(
-        "http://localhost:4040/api/appointment/slot-appointments"
-      );
-      const data = await res.json();
-      console.log("slots:", data);
-      this.slots = data.message;
-    },
-    async save() {
-      const res = await fetch("http://localhost:4040/api/appointments", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: this.n,
-          date: this.d,
-          time: this.t,
-        }),
-      });
-      const data = await res.json();
-      console.log("save response:", data);
-
-      location.reload();
+    onSubmit() {
+      this.isLoading = true;
+      console.log("this.mail:", this.mail);
+      console.log("this.password:", this.password);
+      this.$appAxios
+        .request("/user/login", {
+          method: "post",
+          data: {
+            mail: this.mail,
+            password: this.password,
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          this.isLoading = false;
+          return response.data;
+        })
+        .then((data) => {
+          this.$store.commit("saveUser", data.message.user);
+          this.$appAxios.setHeader(data.message.tokens.access_token);
+          console.log(this.$appAxios);
+        })
+        .catch((err) => {
+          console.log(err.message);
+          this.isLoading = false;
+        });
     },
   },
 };

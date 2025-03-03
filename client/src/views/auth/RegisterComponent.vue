@@ -24,7 +24,7 @@
       "
     >
       <input
-        v-model="name"
+        v-model="fullname"
         style="
           width: 100%;
           padding: 8px;
@@ -57,7 +57,7 @@
 
       <!-- Bad practice: No loading states or error handling -->
       <button
-        @click="save"
+        @click="onSubmit"
         style="
           width: 100%;
           padding: 10px;
@@ -77,47 +77,29 @@
 export default {
   data() {
     return {
-      name: "",
+      fullname: "",
       mail: "",
       password: "",
     };
   },
 
-  mounted() {
-    this.fetchData();
-    this.fetchSlots();
-  },
   methods: {
-    async fetchData() {
-      const res = await fetch("http://localhost:4040/api/appointments");
-      const data = await res.json();
-      console.log("appointments:", data);
-      this.appointments = data;
-    },
-    async fetchSlots() {
-      const res = await fetch(
-        "http://localhost:4040/api/appointment/slot-appointments"
-      );
-      const data = await res.json();
-      console.log("slots:", data);
-      this.slots = data.message;
-    },
-    async save() {
-      const res = await fetch("http://localhost:4040/api/appointments", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: this.n,
-          date: this.d,
-          time: this.t,
-        }),
-      });
-      const data = await res.json();
-      console.log("save response:", data);
-
-      location.reload();
+    onSubmit() {
+      this.$appAxios
+        .request("/user/register", {
+          method: "post",
+          data: {
+            fullname: this.fullname,
+            mail: this.mail,
+            password: this.password,
+          },
+        })
+        .then((response) => response.data)
+        .then((data) => {
+          this.$store.commit("saveUser", data.message.user);
+          this.$$appAxios.setHeader(data.message.tokens.access_token);
+        })
+        .then((err) => console.log(err.message));
     },
   },
 };
