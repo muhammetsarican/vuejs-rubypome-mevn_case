@@ -16,22 +16,22 @@ class UserController extends BaseController {
         return async (req, res, next) => {
             const refreshToken = req.headers.cookie?.split("refresh_token=")[1]?.split(";")[0] || "";
 
-            const response = await AuthenticateRefreshToken(refreshToken, next, res);
+            const authenticatedUser = await AuthenticateRefreshToken(refreshToken, next, res);
 
-            if (!response) return next(new Error("Authentication failed"));
-            response.message = {
+            if (!authenticatedUser) return next(new Error("Authentication failed"));
+            const response = {
                 user: {
-                    ...response.message.toObject(),
+                    ...authenticatedUser.toObject(),
                     logged_at: new Date()
                 },
                 tokens: {
-                    access_token: generateBothTokensByUser(response.message).access_token,
+                    access_token: generateBothTokensByUser(authenticatedUser).access_token,
                     refresh_token: refreshToken
                 }
             }
 
             // ? in here, refresh token send with cookie for provide security
-            setHttpOnlyCookie(res, "refresh_token", response.message.tokens.refreshToken);
+            setHttpOnlyCookie(res, "refresh_token", response.tokens.refreshToken);
 
             res.status(200).send({
                 success: true,
@@ -68,7 +68,7 @@ class UserController extends BaseController {
     register() {
         return (req, res, next) => {
             const data = {
-                mail: req.body.mail,
+                ...req.body,
                 password: hashPass(req.body.password)
             }
 
