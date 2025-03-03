@@ -11,11 +11,16 @@ export default createStore({
             state.user = user;
         },
         setAppointments(state, appointments) {
-            state.appointments = appointments;
+            if (!state.appointments) {
+                state.appointments = appointments;
+            }
+            else {
+                state.appointments.push(appointments);
+            }
         },
         setSlots(state, slots) {
             state.slots = slots;
-        }
+        },
     },
     getters: {
         _getCurrentUser(state) {
