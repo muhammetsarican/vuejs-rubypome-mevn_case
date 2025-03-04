@@ -1,25 +1,40 @@
 <template>
   <div class="p-20 bg-slate-100 h-dvh flex justify-center items-center">
-    <!-- // ! Fixed:Bad practice: Inline styles everywhere -->
+    <!-- // ! Done:Bad practice: Inline styles everywhere -->
     <div
       class="bg-white p-7 w-fit h-fit shadow-2xl rounded-xl flex flex-col items-center gap-5"
     >
       <h1 class="text-3xl font-bold px-5 py-3">Oturum Aç</h1>
 
-      <!-- Bad practice: No form validation -->
+      <!-- // ! Done:Bad practice: No form validation -->
       <div class="flex flex-col gap-3 p-3">
-        <input
-          class="border p-2 rounded-md min-w-76 text-sm outline-none"
-          v-model="mail"
-          placeholder="E-posta adresiniz"
-        />
-        <input
-          class="border p-2 rounded-md min-w-76 text-sm outline-none"
-          v-model="password"
-          type="password"
-          placeholder="Şifreniz"
-        />
-
+        <div>
+          <input
+            class="border p-2 rounded-md min-w-76 text-sm outline-none"
+            v-model="mail"
+            placeholder="E-posta adresiniz"
+          />
+          <p
+            class="text-xs px-2 text-red-500 font-light"
+            v-if="_getErrors && _getErrors.label === 'mail'"
+          >
+            *{{ _getErrors.message }}
+          </p>
+        </div>
+        <div>
+          <input
+            class="border p-2 rounded-md min-w-76 text-sm outline-none"
+            v-model="password"
+            type="password"
+            placeholder="Şifreniz"
+          />
+          <p
+            class="text-xs px-2 text-red-500 font-light"
+            v-if="_getErrors && _getErrors.label === 'password'"
+          >
+            *{{ _getErrors.message }}
+          </p>
+        </div>
         <!-- // ! Done: Bad practice: No loading states or error handling -->
         <button
           class="flex justify-center items-center my-3 p-2 rounded-md min-w-76 bg-green-500 text-white hover:bg-green-700"
@@ -42,16 +57,22 @@
 import { LoaderCircle } from "lucide-vue-next";
 import { mapGetters } from "vuex";
 import { hashPass } from "../../utils/hashOperations";
+import joi from "joi";
+import { validate } from "../../utils/validate";
 export default {
   data() {
     return {
       mail: "",
       password: "",
       isLoading: false,
+      loginSchema: joi.object({
+        mail: joi.string().min(3).max(50).required(),
+        password: joi.string().min(8).max(20).required(),
+      }),
     };
   },
   computed: {
-    ...mapGetters(["_getCurrentUser"]),
+    ...mapGetters(["_getCurrentUser", "_getErrors"]),
   },
   watch: {
     "$store.getters._getCurrentUser": {
@@ -67,14 +88,21 @@ export default {
   },
   methods: {
     onSubmit() {
+      const data = {
+        mail: this.mail,
+        password: this.password,
+      };
+      const errors = validate(this.loginSchema, data);
+      if (errors) {
+        this.$store.commit("setErrors", errors);
+        return;
+      }
       this.isLoading = true;
+      data.password = hashPass(data.password);
       this.$appAxios
         .request("/user/login", {
           method: "post",
-          data: {
-            mail: this.mail,
-            password: hashPass(this.password),
-          },
+          data,
         })
         .then((response) => {
           console.log(response);

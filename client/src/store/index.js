@@ -4,7 +4,8 @@ export default createStore({
     state: {
         user: null,
         appointments: null,
-        slots: null
+        slots: null,
+        errors: null,
     },
     mutations: {
         saveUser(state, user) {
@@ -26,6 +27,10 @@ export default createStore({
         setSlots(state, slots) {
             state.slots = slots;
         },
+        setErrors(state, errors) {
+            state.errors = errors;
+            setTimeout(() => { state.errors = null }, 5000);
+        },
     },
     getters: {
         _getCurrentUser(state) {
@@ -36,6 +41,9 @@ export default createStore({
         },
         _getSlots(state) {
             return state.slots;
-        }
+        },
+        _getErrors(state) {
+            return state.errors;
+        },
     }
 })

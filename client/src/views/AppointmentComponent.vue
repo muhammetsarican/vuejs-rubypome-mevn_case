@@ -6,30 +6,44 @@
     >
       <h1 class="text-3xl font-bold px-5 py-3">Randevu Sistemi</h1>
 
-      <!-- Bad practice: No form validation -->
+      <!-- // ! Done:Bad practice: No form validation -->
       <div class="flex flex-col gap-3 p-3">
         <!-- // ! Done:Bad practice: Poor variable names -->
-        <select
-          class="border p-2 rounded-md min-w-76 text-sm outline-none"
-          v-model="date"
-        >
-          <option value="">Tarih Seçin</option>
-          <option v-for="date in uniqueDates" :key="date" :value="date">
-            {{ new Date(date).toLocaleDateString("tr-TR") }}
-          </option>
-        </select>
-
-        <select
-          class="border p-2 rounded-md min-w-76 text-sm outline-none"
-          :disabled="!date"
-          v-model="time"
-        >
-          <option value="">Saat Seçin</option>
-          <option v-for="s in filteredTimes" :key="s.time" :value="s.time">
-            {{ s.time }}
-          </option>
-        </select>
-
+        <div>
+          <select
+            class="border p-2 rounded-md min-w-76 text-sm outline-none"
+            v-model="date"
+          >
+            <option value="">Tarih Seçin</option>
+            <option v-for="date in uniqueDates" :key="date" :value="date">
+              {{ new Date(date).toLocaleDateString("tr-TR") }}
+            </option>
+          </select>
+          <p
+            class="text-xs px-2 text-red-500 font-light"
+            v-if="_getErrors && _getErrors.label === 'date'"
+          >
+            *{{ _getErrors.message }}
+          </p>
+        </div>
+        <div>
+          <select
+            class="border p-2 rounded-md min-w-76 text-sm outline-none"
+            :disabled="!date"
+            v-model="time"
+          >
+            <option value="">Saat Seçin</option>
+            <option v-for="s in filteredTimes" :key="s.time" :value="s.time">
+              {{ s.time }}
+            </option>
+          </select>
+          <p
+            class="text-xs px-2 text-red-500 font-light"
+            v-if="_getErrors && _getErrors.label === 'time'"
+          >
+            *{{ _getErrors.message }}
+          </p>
+        </div>
         <!-- // ! Done:Bad practice: No loading states or error handling -->
         <button
           class="flex justify-center items-center my-3 p-2 rounded-md min-w-76 bg-green-500 text-white hover:bg-green-700"
@@ -80,19 +94,30 @@
 <script>
 import { mapGetters } from "vuex";
 import { LoaderCircle } from "lucide-vue-next";
+import joi from "joi";
+import { validate } from "../utils/validate";
 export default {
   data() {
     return {
       date: "",
       time: "",
       isLoading: false,
+      appointmentSchema: joi.object({
+        date: joi.string().min(3).max(15).required(),
+        time: joi.string().min(3).max(15).required(),
+      }),
     };
   },
   components: {
     LoaderCircle,
   },
   computed: {
-    ...mapGetters(["_getAppointments", "_getSlots", "_getCurrentUser"]),
+    ...mapGetters([
+      "_getAppointments",
+      "_getSlots",
+      "_getCurrentUser",
+      "_getErrors",
+    ]),
     filteredTimes() {
       if (!this.date) return [];
       const temp = this._getSlots.filter((slot) => slot.date === this.date);
@@ -133,14 +158,20 @@ export default {
     },
     onSubmit() {
       if (!this._getCurrentUser) return;
+      const data = {
+        date: this.date,
+        time: this.time,
+      };
+      const errors = validate(this.appointmentSchema, data);
+      if (errors) {
+        this.$store.commit("setErrors", errors);
+        return;
+      }
       this.isLoading = true;
       this.$appAxios
         .request(`/appointment/${this._getCurrentUser._id}`, {
           method: "post",
-          data: {
-            date: this.date,
-            time: this.time,
-          },
+          data,
         })
         .then((response) => response.data)
         .then((data) => {
