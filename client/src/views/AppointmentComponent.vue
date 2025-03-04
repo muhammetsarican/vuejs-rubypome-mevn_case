@@ -34,8 +34,8 @@
         "
       >
         <option value="">Tarih Seçin</option>
-        <option v-for="s in _getSlots" :key="s.date + s.time" :value="s.date">
-          {{ s.date }}
+        <option v-for="date in uniqueDates" :key="date" :value="date">
+          {{ date }}
         </option>
       </select>
 
@@ -57,17 +57,23 @@
       <!-- Bad practice: No loading states or error handling -->
       <button
         @click="onSubmit"
+        @disabled="isLoading"
         style="
           width: 100%;
-          padding: 10px;
+          padding: 5px;
           background: #4caf50;
           color: white;
           border: none;
           border-radius: 4px;
-          cursor: pointer;
         "
       >
-        Kaydet
+        <LoaderCircle
+          class="animate-spin"
+          :size="22"
+          :stroke-width="2"
+          v-if="isLoading"
+        />
+        <span v-else>Kaydet</span>
       </button>
     </div>
 
@@ -98,27 +104,43 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
+import { LoaderCircle } from "lucide-vue-next";
 export default {
   data() {
     return {
       name: "",
       date: "",
       time: "",
+      isLoading: false,
     };
+  },
+  components: {
+    LoaderCircle,
   },
   computed: {
     ...mapGetters(["_getAppointments", "_getSlots", "_getCurrentUser"]),
     filteredTimes() {
       if (!this.date) return [];
-      const temp = this._getSlots.filter((s) => s.date === this.date);
+      const temp = this._getSlots.filter((slot) => slot.date === this.date);
       console.log("filtered times:", temp);
       return temp;
     },
+    // ? for list same dates only one time
+    uniqueDates() {
+      if (!this._getSlots) return null;
+      return new Set(this._getSlots.map((slot) => slot.date));
+    },
   },
-
-  mounted() {
-    this.fetchAppointments();
-    this.fetchSlots();
+  watch: {
+    "this._getCurrentUser": {
+      handler() {
+        if (this._getCurrentUser) {
+          this.fetchAppointments();
+          this.fetchSlots();
+        }
+      },
+      immediate: true,
+    },
   },
   methods: {
     fetchAppointments() {
@@ -138,6 +160,7 @@ export default {
     },
     onSubmit() {
       if (!this._getCurrentUser) return;
+      this.isLoading = true;
       this.$appAxios
         .request(`/appointment/${this._getCurrentUser._id}`, {
           method: "post",
@@ -147,8 +170,14 @@ export default {
           },
         })
         .then((response) => response.data)
-        .then((data) => this.$store.commit("setAppointments", data.message))
-        .catch((err) => console.log(err.message));
+        .then((data) => {
+          this.$store.commit("setAppointments", data.message);
+          this.isLoading = false;
+        })
+        .catch((err) => {
+          console.log(err.message);
+          this.isLoading = false;
+        });
     },
   },
 };
