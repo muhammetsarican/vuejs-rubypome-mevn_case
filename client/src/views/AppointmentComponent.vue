@@ -96,7 +96,6 @@ export default {
     filteredTimes() {
       if (!this.date) return [];
       const temp = this._getSlots.filter((slot) => slot.date === this.date);
-      console.log("filtered times:", temp);
       return temp;
     },
     // ? for list same dates only one time

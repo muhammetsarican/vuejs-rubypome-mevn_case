@@ -12,7 +12,12 @@ export default createStore({
         },
         setAppointments(state, appointments) {
             if (!state.appointments) {
-                state.appointments = appointments;
+                if (appointments.length) {
+                    state.appointments = appointments;
+                }
+                else {
+                    state.appointments = [appointments];
+                }
             }
             else {
                 state.appointments.push(appointments);
