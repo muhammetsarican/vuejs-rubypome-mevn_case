@@ -57,7 +57,7 @@
       <!-- Bad practice: No loading states or error handling -->
       <button
         @click="onSubmit"
-        @disabled="isLoading"
+        :disabled="isLoading"
         style="
           width: 100%;
           padding: 5px;
