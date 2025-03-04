@@ -5,7 +5,6 @@
     - ***docker** for prod*
     - ***express** for server*
     - ***vue** for client*
-
 - **Server**:
     - ***mongoose** for db*
     - ***joi** for validations*
@@ -17,6 +16,9 @@
     - ***vue-router** for routing*
     - ***axios** for fetching api*
     - ***vuex** for store*
+    - ***lucide-vue-next** for icons*
+    - ***tailwindcss** for styling*
+
 
 ## 🛸 Features
 - Auto login
@@ -110,6 +112,7 @@ Rubypome/
 │  ├─ package.json
 │  ├─ src/
 │  │  ├─ App.vue
+│  │  ├─ assets/
 │  │  ├─ main.js
 │  │  ├─ router.js
 │  │  ├─ store/
