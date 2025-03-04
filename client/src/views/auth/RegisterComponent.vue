@@ -45,6 +45,8 @@
 </template>
 <script>
 import { LoaderCircle } from "lucide-vue-next";
+import { hashPass } from "../../utils/hashOperations";
+
 export default {
   data() {
     return {
@@ -66,7 +68,7 @@ export default {
           data: {
             fullname: this.fullname,
             mail: this.mail,
-            password: this.password,
+            password: hashPass(this.password),
           },
         })
         .then((response) => response.data)

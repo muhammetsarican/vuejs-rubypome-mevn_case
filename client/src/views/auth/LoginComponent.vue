@@ -41,6 +41,7 @@
 <script>
 import { LoaderCircle } from "lucide-vue-next";
 import { mapGetters } from "vuex";
+import { hashPass } from "../../utils/hashOperations";
 export default {
   data() {
     return {
@@ -72,7 +73,7 @@ export default {
           method: "post",
           data: {
             mail: this.mail,
-            password: this.password,
+            password: hashPass(this.password),
           },
         })
         .then((response) => {
