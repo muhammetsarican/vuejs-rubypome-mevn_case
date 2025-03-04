@@ -48,23 +48,29 @@
       <!-- Bad practice: No loading states or error handling -->
       <button
         @click="onSubmit"
-        @disabled="isLoading"
+        :disabled="isLoading"
         style="
           width: 100%;
-          padding: 10px;
+          padding: 5px;
           background: #4caf50;
           color: white;
           border: none;
           border-radius: 4px;
-          cursor: pointer;
         "
       >
-        {{ isLoading ? "loading..." : "Oturum Aç" }}
+        <LoaderCircle
+          class="animate-spin"
+          :size="24"
+          :stroke-width="2"
+          v-if="isLoading"
+        />
+        <span v-else>Oturum Aç</span>
       </button>
     </div>
   </div>
 </template>
 <script>
+import { LoaderCircle } from "lucide-vue-next";
 export default {
   data() {
     return {
@@ -73,11 +79,12 @@ export default {
       isLoading: false,
     };
   },
+  components: {
+    LoaderCircle,
+  },
   methods: {
     onSubmit() {
       this.isLoading = true;
-      console.log("this.mail:", this.mail);
-      console.log("this.password:", this.password);
       this.$appAxios
         .request("/user/login", {
           method: "post",
@@ -94,7 +101,7 @@ export default {
         .then((data) => {
           this.$store.commit("saveUser", data.message.user);
           this.$appAxios.setHeader(data.message.tokens.access_token);
-          console.log(this.$appAxios);
+          this.$router.push({ name: "Appointments" });
         })
         .catch((err) => {
           console.log(err.message);

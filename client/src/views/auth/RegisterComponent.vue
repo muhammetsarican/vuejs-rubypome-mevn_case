@@ -58,9 +58,10 @@
       <!-- Bad practice: No loading states or error handling -->
       <button
         @click="onSubmit"
+        :disabled="isLoading"
         style="
           width: 100%;
-          padding: 10px;
+          padding: 5px;
           background: #4caf50;
           color: white;
           border: none;
@@ -68,23 +69,34 @@
           cursor: pointer;
         "
       >
-        Kayıt Ol
+        <LoaderCircle
+          class="animate-spin"
+          :size="24"
+          :stroke-width="2"
+          v-if="isLoading"
+        />
+        <span v-else>Kayıt Ol</span>
       </button>
     </div>
   </div>
 </template>
 <script>
+import { LoaderCircle } from "lucide-vue-next";
 export default {
   data() {
     return {
       fullname: "",
       mail: "",
       password: "",
+      isLoading: false,
     };
   },
-
+  components: {
+    LoaderCircle,
+  },
   methods: {
     onSubmit() {
+      this.isLoading = true;
       this.$appAxios
         .request("/user/register", {
           method: "post",
@@ -98,8 +110,12 @@ export default {
         .then((data) => {
           this.$store.commit("saveUser", data.message.user);
           this.$$appAxios.setHeader(data.message.tokens.access_token);
+          this.isLoading = false;
         })
-        .then((err) => console.log(err.message));
+        .then((err) => {
+          console.log(err.message);
+          this.isLoading = false;
+        });
     },
   },
 };
