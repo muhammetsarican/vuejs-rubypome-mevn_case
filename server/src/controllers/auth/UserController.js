@@ -87,6 +87,15 @@ class UserController extends BaseController {
                 })
         }
     }
+
+    logout() {
+        return (req, res, next) => {
+            res.clearCookie("refresh_token").status(200).send({
+                success: true,
+                message: "You successfully logged out!"
+            })
+        }
+    }
 }
 
 module.exports = new UserController();
