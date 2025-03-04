@@ -11,13 +11,18 @@
           >Appointments</router-link
         >
         <div
-          class="flex gap-1 items-center p-3 rounded-full text-sm font-medium bg-white"
+          class="group flex gap-1 items-center p-3 rounded-full text-sm font-medium bg-white hover:bg-red-500 hover:text-white cursor-pointer"
+          @click="logout"
         >
-          <User :size="24" :stroke-width="2" />
-          <p class="inline" v-if="_getCurrentUser.fullname">
+          <User class="group-hover:hidden" :size="24" :stroke-width="2" />
+          <DoorOpen class="hidden stroke-white group-hover:block" />
+          <p class="inline group-hover:hidden" v-if="_getCurrentUser.fullname">
             {{ _getCurrentUser.fullname }}
           </p>
-          <p class="inline" v-else>{{ _getCurrentUser.mail }}</p>
+          <p class="inline group-hover:hidden" v-else>
+            {{ _getCurrentUser.mail }}
+          </p>
+          <p class="hidden group-hover:block">Oturumu Kapat</p>
         </div>
       </div>
       <div
@@ -41,25 +46,44 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
-import { User } from "lucide-vue-next";
+import { User, DoorOpen } from "lucide-vue-next";
 export default {
   computed: {
     ...mapGetters(["_getCurrentUser"]),
   },
   components: {
     User,
+    DoorOpen,
   },
   mounted() {
-    this.$appAxios
-      .request("/user/check-token", {
-        method: "get",
-      })
-      .then((response) => response.data)
-      .then((data) => {
-        this.$store.commit("saveUser", data.message.user);
-        this.$appAxios.setHeader(data.message.tokens.access_token);
-      })
-      .catch((err) => console.log(err.message));
+    this.checkToken();
+  },
+  methods: {
+    checkToken() {
+      this.$appAxios
+        .request("/user/check-token", {
+          method: "get",
+        })
+        .then((response) => response.data)
+        .then((data) => {
+          this.$store.commit("saveUser", data.message.user);
+          this.$appAxios.setHeader(data.message.tokens.access_token);
+        })
+        .catch((err) => console.log(err.message));
+    },
+    logout() {
+      if (confirm("Oturum kapatılacak emin misiniz?")) {
+        this.$appAxios
+          .request("/user/logout")
+          .then((response) => response.data)
+          .then(() => {
+            this.$store.commit("saveUser", null);
+            this.$appAxios.setHeader(null);
+            this.$router.push({ name: "Login" });
+          })
+          .catch((err) => console.log(err.message));
+      }
+    },
   },
 };
 </script>
