@@ -2,6 +2,7 @@ const BaseController = require("../BaseController");
 
 const AppointmentService = require("../../services/main/AppointmentService");
 const { slotAppointments, filterSlotAppointments } = require("../../helpers/filterSlotAppointments");
+const { default: mongoose } = require("mongoose");
 
 class AppointmentController extends BaseController {
     constructor() {
@@ -24,19 +25,35 @@ class AppointmentController extends BaseController {
 
     create() {
         return (req, res, next) => {
-            const data = {
-                user_id: req.params.user_id,
-                date: req.body.date,
-                time: req.body.time,
-            }
+            //! I got help from chat GPT as information about the transactions, because I don't know enough about it.
+            mongoose.startSession()
+                .then(session => {
+                    session.startTransaction();
 
-            this.Service.insert(data)
-                .then(response => {
-                    res.status(201).send({
-                        success: true,
-                        message: response
-                    })
+                    const data = {
+                        date: req.body.date,
+                        time: req.body.time,
+                    }
+
+                    this.Service.findOne(data)
+                        .then(appointment => {
+                            if (appointment) return next(new Error("Slot already taken"));
+
+                            data.user_id = req.params.user_id;
+
+                            this.Service.insert(data)
+                                .then(response => {
+                                    res.status(201).send({
+                                        success: true,
+                                        message: response
+                                    })
+                                })
+                        })
+
+                    session.commitTransaction();
+                    session.endSession();
                 })
+
         }
     }
 
