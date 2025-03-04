@@ -1,104 +1,79 @@
 <template>
-  <div
-    style="
-      padding: 20px;
-      font-family: Arial;
-      background-color: #f0f0f0;
-      min-height: 100vh;
-    "
-  >
-    <!-- Bad practice: Inline styles everywhere -->
-    <h1 style="color: blue; text-align: center; margin-bottom: 30px">
-      Randevu Sistemi
-    </h1>
-
-    <!-- Bad practice: No form validation -->
+  <div class="flex justify-center items-center h-dvh bg-slate-100">
+    <!-- // ! Done:Bad practice: Inline styles everywhere -->
     <div
-      style="
-        max-width: 600px;
-        margin: 0 auto;
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      "
+      class="bg-white flex flex-col items-center gap-5 p-7 rounded-lg shadow-2xl"
     >
-      <!-- Bad practice: Poor variable names -->
-      <select
-        v-model="date"
-        style="
-          width: 100%;
-          padding: 8px;
-          margin-bottom: 10px;
-          border: 1px solid #ddd;
-        "
-      >
-        <option value="">Tarih Seçin</option>
-        <option v-for="date in uniqueDates" :key="date" :value="date">
-          {{ date }}
-        </option>
-      </select>
+      <h1 class="text-3xl font-bold px-5 py-3">Randevu Sistemi</h1>
 
-      <select
-        v-model="time"
-        style="
-          width: 100%;
-          padding: 8px;
-          margin-bottom: 10px;
-          border: 1px solid #ddd;
-        "
-      >
-        <option value="">Saat Seçin</option>
-        <option v-for="s in filteredTimes" :key="s.time" :value="s.time">
-          {{ s.time }}
-        </option>
-      </select>
-
-      <!-- Bad practice: No loading states or error handling -->
-      <button
-        @click="onSubmit"
-        :disabled="isLoading"
-        style="
-          width: 100%;
-          padding: 5px;
-          background: #4caf50;
-          color: white;
-          border: none;
-          border-radius: 4px;
-        "
-      >
-        <LoaderCircle
-          class="animate-spin"
-          :size="22"
-          :stroke-width="2"
-          v-if="isLoading"
-        />
-        <span v-else>Kaydet</span>
-      </button>
-    </div>
-
-    <!-- Bad practice: No pagination or filtering -->
-    <div
-      style="
-        max-width: 600px;
-        margin: 20px auto;
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      "
-    >
-      <h2 style="margin-bottom: 20px">Mevcut Randevular</h2>
-      <div v-if="_getAppointments && _getAppointments.length > 0">
-        <div
-          v-for="a in _getAppointments"
-          :key="a.id"
-          style="padding: 10px; border-bottom: 1px solid #ddd"
+      <!-- Bad practice: No form validation -->
+      <div class="flex flex-col gap-3 p-3">
+        <!-- // ! Done:Bad practice: Poor variable names -->
+        <select
+          class="border p-2 rounded-md min-w-76 text-sm outline-none"
+          v-model="date"
         >
-          {{ a.name }} - {{ a.date }} {{ a.time }}
-        </div>
+          <option value="">Tarih Seçin</option>
+          <option v-for="date in uniqueDates" :key="date" :value="date">
+            {{ new Date(date).toLocaleDateString("tr-TR") }}
+          </option>
+        </select>
+
+        <select
+          class="border p-2 rounded-md min-w-76 text-sm outline-none"
+          :disabled="!date"
+          v-model="time"
+        >
+          <option value="">Saat Seçin</option>
+          <option v-for="s in filteredTimes" :key="s.time" :value="s.time">
+            {{ s.time }}
+          </option>
+        </select>
+
+        <!-- // ! Done:Bad practice: No loading states or error handling -->
+        <button
+          class="flex justify-center items-center my-3 p-2 rounded-md min-w-76 bg-green-500 text-white hover:bg-green-700"
+          @click="onSubmit"
+          :disabled="isLoading || (!this.date && !this.time)"
+        >
+          <LoaderCircle
+            class="animate-spin"
+            :size="22"
+            :stroke-width="2"
+            v-if="isLoading"
+          />
+          <span v-else>Kaydet</span>
+        </button>
       </div>
-      <p v-else>Randevu bulunamadı...</p>
+
+      <!-- // ! Done:Bad practice: No pagination or filtering -->
+      <div
+        class="flex flex-col gap-3 w-full justify-start border border-slate-300 rounded-lg p-3"
+      >
+        <h2 class="text-xl font-bold">Kayıtlı Randevularım :</h2>
+        <div
+          class="grid grid-cols-2 gap-1"
+          v-if="_getAppointments && _getAppointments.length > 0"
+        >
+          <div
+            class="w-fit px-3 py-1 rounded-md bg-green-300 text-gray-700"
+            v-for="appointment in _getAppointments"
+            :key="appointment.id"
+          >
+            {{
+              new Date(
+                [appointment.date, appointment.time].join(",")
+              ).toLocaleString("tr-TR")
+            }}
+          </div>
+        </div>
+        <p
+          class="text-xs font-semibold rounded-md bg-red-500 text-white p-2"
+          v-else
+        >
+          Randevu bulunamadı...
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -108,7 +83,6 @@ import { LoaderCircle } from "lucide-vue-next";
 export default {
   data() {
     return {
-      name: "",
       date: "",
       time: "",
       isLoading: false,
