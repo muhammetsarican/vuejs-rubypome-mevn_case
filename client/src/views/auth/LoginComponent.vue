@@ -40,6 +40,7 @@
 </template>
 <script>
 import { LoaderCircle } from "lucide-vue-next";
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -47,6 +48,18 @@ export default {
       password: "",
       isLoading: false,
     };
+  },
+  computed: {
+    ...mapGetters(["_getCurrentUser"]),
+  },
+  watch: {
+    "$store.getters._getCurrentUser": {
+      handler: function () {
+        if (this._getCurrentUser) {
+          this.$router.push({ name: "Appointments" });
+        }
+      },
+    },
   },
   components: {
     LoaderCircle,
