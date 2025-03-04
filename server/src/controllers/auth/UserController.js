@@ -30,9 +30,6 @@ class UserController extends BaseController {
                 }
             }
 
-            // ? in here, refresh token send with cookie for provide security
-            setHttpOnlyCookie(res, "refresh_token", response.tokens.refreshToken);
-
             res.status(200).send({
                 success: true,
                 message: response
@@ -55,6 +52,7 @@ class UserController extends BaseController {
                         tokens: generateBothTokensByUser(user)
                     }
 
+                    // ? in here, refresh token send with cookie for provide security
                     setHttpOnlyCookie(res, "refresh_token", response.tokens.refresh_token);
 
                     res.status(200).send({
@@ -79,6 +77,7 @@ class UserController extends BaseController {
                         tokens: generateBothTokensByUser(user)
                     }
 
+                    // ? in here, refresh token send with cookie for provide security
                     setHttpOnlyCookie(res, "refresh_token", response.tokens.refresh_token);
 
                     res.status(201).send({
