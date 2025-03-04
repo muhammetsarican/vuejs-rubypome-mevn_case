@@ -25,7 +25,7 @@ class UserRoute extends BaseRoute {
 
     // ? register method
     register() {
-        this.Router.route("/register").post(this.Controller.register());
+        this.Router.route("/register").post(validate(schemas.createValidation), this.Controller.register());
     }
 
     // ? routes can add or remove from here
