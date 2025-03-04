@@ -120,7 +120,7 @@ export default {
           this.isLoading = false;
         })
         .catch((err) => {
-          console.log(err.message);
+          this.$store.commit("setApiErrors", err.response.data);
           this.isLoading = false;
         });
     },

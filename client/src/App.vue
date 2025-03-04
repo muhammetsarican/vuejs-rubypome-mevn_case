@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-slate-300">
+  <div class="relative bg-slate-300">
     <div
       class="container mx-auto border-b border-gray-300 p-5 text-gray-700 flex justify-between items-center"
     >
@@ -42,18 +42,28 @@
       </div>
     </div>
     <router-view></router-view>
+    <div
+      class="fixed bottom-5 right-5 flex gap-3 items-center rounded-md bg-red-500 text-white p-5"
+      v-if="_getApiErrors"
+    >
+      <CircleX />
+      <p class="font-semibold capitalize">
+        {{ _getApiErrors || "An error occured" }}
+      </p>
+    </div>
   </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
-import { User, DoorOpen } from "lucide-vue-next";
+import { User, DoorOpen, CircleX } from "lucide-vue-next";
 export default {
   computed: {
-    ...mapGetters(["_getCurrentUser"]),
+    ...mapGetters(["_getCurrentUser", "_getApiErrors"]),
   },
   components: {
     User,
     DoorOpen,
+    CircleX,
   },
   mounted() {
     this.checkToken();
@@ -69,7 +79,7 @@ export default {
           this.$store.commit("saveUser", data.message.user);
           this.$appAxios.setHeader(data.message.tokens.access_token);
         })
-        .catch((err) => console.log(err.message));
+        .catch((err) => this.$store.commit("setApiErrors", err.response.data));
     },
     logout() {
       if (confirm("Oturum kapatılacak emin misiniz?")) {
@@ -81,7 +91,9 @@ export default {
             this.$appAxios.setHeader(null);
             this.$router.push({ name: "Login" });
           })
-          .catch((err) => console.log(err.message));
+          .catch((err) =>
+            this.$store.commit("setApiErrors", err.response.data)
+          );
       }
     },
   },

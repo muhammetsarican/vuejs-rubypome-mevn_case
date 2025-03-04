@@ -6,6 +6,7 @@ export default createStore({
         appointments: null,
         slots: null,
         errors: null,
+        apiErrors: null,
     },
     mutations: {
         saveUser(state, user) {
@@ -31,6 +32,10 @@ export default createStore({
             state.errors = errors;
             setTimeout(() => { state.errors = null }, 5000);
         },
+        setApiErrors(state, apiErrors) {
+            state.apiErrors = apiErrors;
+            setTimeout(() => { state.apiErrors = null }, 5000);
+        },
     },
     getters: {
         _getCurrentUser(state) {
@@ -44,6 +49,9 @@ export default createStore({
         },
         _getErrors(state) {
             return state.errors;
+        },
+        _getApiErrors(state) {
+            return state.apiErrors;
         },
     }
 })

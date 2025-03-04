@@ -147,14 +147,14 @@ export default {
         .request(`/appointment/${this._getCurrentUser._id}`)
         .then((response) => response.data)
         .then((data) => this.$store.commit("setAppointments", data.message))
-        .catch((err) => console.log(err.message));
+        .catch((err) => this.$store.commit("setApiErrors", err.response.data));
     },
     fetchSlots() {
       this.$appAxios
         .request("/appointment/slot-appointments")
         .then((response) => response.data)
         .then((data) => this.$store.commit("setSlots", data.message))
-        .catch((err) => console.log(err.message));
+        .catch((err) => this.$store.commit("setApiErrors", err.response.data));
     },
     onSubmit() {
       if (!this._getCurrentUser) return;
@@ -179,7 +179,7 @@ export default {
           this.isLoading = false;
         })
         .catch((err) => {
-          console.log(err.message);
+          this.$store.commit("setApiErrors", err.response.data);
           this.isLoading = false;
         });
     },

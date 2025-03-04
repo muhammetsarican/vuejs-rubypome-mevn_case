@@ -115,7 +115,7 @@ export default {
           this.$router.push({ name: "Appointments" });
         })
         .catch((err) => {
-          console.log(err.message);
+          this.$store.commit("setApiErrors", err.response.data);
           this.isLoading = false;
         });
     },
