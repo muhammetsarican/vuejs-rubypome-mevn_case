@@ -9,7 +9,7 @@
     - ***mongoose** for db*
     - ***joi** for validations*
     - ***dotenv** for env vars*
-    - ***cryptojs** for hashing vars*
+    - ***crypto-js** for hashing vars*
     - ***jsonwebtoken** for authentication*
     - ***cors** for managing requests*
 - **Client**:
@@ -18,10 +18,19 @@
     - ***vuex** for store*
     - ***lucide-vue-next** for icons*
     - ***tailwindcss** for styling*
-
+    - ***crypto-js** for hashing vars*
+    - ***joi** for validations*
 
 ## 🛸 Features
 - Auto login
+- Jwt keeps at http only cookies
+- Mongo db and mongoose used for db operations
+- Hashing password both client and server side
+- Race condition prevented at creating appointment
+- All inline styles replaced with tailwindcss classes
+- Bad var names updated
+- Users can show only own appointments 
+- Client and server side both has validations
 
 ## 🚀 Run Locally
 
@@ -37,7 +46,7 @@ Go to the project directory
   cd vuejs-rubypome-mevn_case/
 ```
 
-#### ***Firstly: convert all .env.example files to .env files and fill them your own choices.***
+#### ***Firstly: convert all .env.example files to .env files under client and server folders, fill them your own choices.***
 #### ***Now: run db with docker.***
 
 For run the db you can use one of these
@@ -105,6 +114,7 @@ Rubypome/
 ├─ .gitignore
 ├─ README.md
 ├─ client/
+│  ├─ .env.example
 │  ├─ .gitignore
 │  ├─ README.md
 │  ├─ index.html
@@ -141,3 +151,7 @@ Rubypome/
 
 - [@muhammetsarican](https://www.github.com/muhammetsarican)
 
+<!-- 
+    edit compose.yml as it can run the whole application
+    edit readme with your final thaughts
+ -->
