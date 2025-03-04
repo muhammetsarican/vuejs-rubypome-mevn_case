@@ -72,11 +72,11 @@ export default {
         .then((response) => response.data)
         .then((data) => {
           this.$store.commit("saveUser", data.message.user);
-          this.$$appAxios.setHeader(data.message.tokens.access_token);
-          this.isLoading = false;
+          this.$appAxios.setHeader(data.message.tokens.access_token);
           this.$router.push({ name: "Appointments" });
+          this.isLoading = false;
         })
-        .then((err) => {
+        .catch((err) => {
           console.log(err.message);
           this.isLoading = false;
         });
