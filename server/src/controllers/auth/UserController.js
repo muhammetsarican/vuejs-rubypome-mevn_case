@@ -85,6 +85,9 @@ class UserController extends BaseController {
                         message: response
                     })
                 })
+                .catch(() => {
+                    return next(new Error(`Duplicate key error`));
+                })
         }
     }
 
