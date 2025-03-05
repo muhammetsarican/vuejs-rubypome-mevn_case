@@ -7,6 +7,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: "/",
   plugins: [
     vue(),
     vueDevTools(),
@@ -15,6 +16,7 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173,
+    allowedHosts: ["rubypome.farmrein.com"]
   },
   resolve: {
     alias: {
