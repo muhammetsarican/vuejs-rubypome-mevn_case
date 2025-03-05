@@ -3,6 +3,11 @@ import store from "./store";
 
 const routes = [
     {
+        name: "Home",
+        path: "/",
+        component: () => import("@/views/HomeComponent.vue")
+    },
+    {
         name: "Appointments",
         path: "/appointments",
         component: () => import("@/views/AppointmentComponent.vue")
@@ -29,6 +34,7 @@ router.beforeEach((to, from, next) => {
     const authNotRequiredRoutes = ["Login", "Register"];
 
     const currentUser = store.getters._getCurrentUser;
+    console.log(currentUser, to.name)
 
     if (authNotRequiredRoutes.indexOf(to.name) > -1 && currentUser) next(false);
 

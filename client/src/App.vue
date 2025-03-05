@@ -3,7 +3,9 @@
     <div
       class="container mx-auto border-b border-gray-300 p-5 text-gray-700 flex justify-between items-center"
     >
-      <h1 class="uppercase text-4xl bg-white p-1 rounded-md">RubyPome</h1>
+      <router-link to="/" class="uppercase text-4xl bg-white p-1 rounded-md"
+        >RubyPome</router-link
+      >
       <div class="flex gap-3 items-center" v-if="_getCurrentUser">
         <router-link
           to="/appointments"
@@ -41,9 +43,11 @@
         >
       </div>
     </div>
-    <router-view></router-view>
+    <div class="flex justify-center items-center h-dvh bg-slate-100">
+      <router-view></router-view>
+    </div>
     <div
-      class="fixed bottom-5 right-5 flex gap-3 items-center rounded-md bg-red-500 text-white p-5"
+      class="fixed bottom-5 right-5 flex gap-3 items-center rounded-md bg-red-500 text-white p-5 shadow-2xl"
       v-if="_getApiErrors"
     >
       <CircleX />

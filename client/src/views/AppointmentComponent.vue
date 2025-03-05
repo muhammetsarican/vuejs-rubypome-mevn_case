@@ -1,93 +1,91 @@
 <template>
-  <div class="flex justify-center items-center h-dvh bg-slate-100">
-    <!-- // ! Done:Bad practice: Inline styles everywhere -->
-    <div
-      class="bg-white flex flex-col items-center gap-5 p-7 rounded-lg shadow-2xl"
-    >
-      <h1 class="text-3xl font-bold px-5 py-3">Randevu Sistemi</h1>
+  <!-- // ! Done:Bad practice: Inline styles everywhere -->
+  <div
+    class="bg-white flex flex-col items-center gap-5 p-7 rounded-lg shadow-2xl"
+  >
+    <h1 class="text-3xl font-bold px-5 py-3">Randevu Sistemi</h1>
 
-      <!-- // ! Done:Bad practice: No form validation -->
-      <div class="flex flex-col gap-3 p-3">
-        <!-- // ! Done:Bad practice: Poor variable names -->
-        <div>
-          <select
-            class="border p-2 rounded-md min-w-76 text-sm outline-none"
-            v-model="date"
-          >
-            <option value="">Tarih Seçin</option>
-            <option v-for="date in uniqueDates" :key="date" :value="date">
-              {{ new Date(date).toLocaleDateString("tr-TR") }}
-            </option>
-          </select>
-          <p
-            class="text-xs px-2 text-red-500 font-light"
-            v-if="_getErrors && _getErrors.label === 'date'"
-          >
-            *{{ _getErrors.message }}
-          </p>
-        </div>
-        <div>
-          <select
-            class="border p-2 rounded-md min-w-76 text-sm outline-none"
-            :disabled="!date"
-            v-model="time"
-          >
-            <option value="">Saat Seçin</option>
-            <option v-for="s in filteredTimes" :key="s.time" :value="s.time">
-              {{ s.time }}
-            </option>
-          </select>
-          <p
-            class="text-xs px-2 text-red-500 font-light"
-            v-if="_getErrors && _getErrors.label === 'time'"
-          >
-            *{{ _getErrors.message }}
-          </p>
-        </div>
-        <!-- // ! Done:Bad practice: No loading states or error handling -->
-        <button
-          class="flex justify-center items-center my-3 p-2 rounded-md min-w-76 bg-green-500 text-white hover:bg-green-700"
-          @click="onSubmit"
-          :disabled="isLoading || (!this.date && !this.time)"
+    <!-- // ! Done:Bad practice: No form validation -->
+    <div class="flex flex-col gap-3 p-3">
+      <!-- // ! Done:Bad practice: Poor variable names -->
+      <div>
+        <select
+          class="border p-2 rounded-md min-w-76 text-sm outline-none"
+          v-model="date"
         >
-          <LoaderCircle
-            class="animate-spin"
-            :size="22"
-            :stroke-width="2"
-            v-if="isLoading"
-          />
-          <span v-else>Kaydet</span>
-        </button>
-      </div>
-
-      <!-- // ! Done:Bad practice: No pagination or filtering -->
-      <div
-        class="flex flex-col gap-3 w-full justify-start border border-slate-300 rounded-lg p-3"
-      >
-        <h2 class="text-xl font-bold">Kayıtlı Randevularım :</h2>
-        <div
-          class="grid grid-cols-2 gap-1"
-          v-if="_getAppointments && _getAppointments.length > 0"
-        >
-          <div
-            class="w-fit px-3 py-1 rounded-md bg-green-300 text-gray-700"
-            v-for="appointment in _getAppointments"
-            :key="appointment.id"
-          >
-            {{
-              new Date(
-                [appointment.date, appointment.time].join(",")
-              ).toLocaleString("tr-TR")
-            }}
-          </div>
-        </div>
+          <option value="">Tarih Seçin</option>
+          <option v-for="date in uniqueDates" :key="date" :value="date">
+            {{ new Date(date).toLocaleDateString("tr-TR") }}
+          </option>
+        </select>
         <p
-          class="text-xs font-semibold rounded-md bg-red-500 text-white p-2"
-          v-else
+          class="text-xs px-2 text-red-500 font-light"
+          v-if="_getErrors && _getErrors.label === 'date'"
         >
-          Randevu bulunamadı...
+          *{{ _getErrors.message }}
         </p>
       </div>
+      <div>
+        <select
+          class="border p-2 rounded-md min-w-76 text-sm outline-none"
+          :disabled="!date"
+          v-model="time"
+        >
+          <option value="">Saat Seçin</option>
+          <option v-for="s in filteredTimes" :key="s.time" :value="s.time">
+            {{ s.time }}
+          </option>
+        </select>
+        <p
+          class="text-xs px-2 text-red-500 font-light"
+          v-if="_getErrors && _getErrors.label === 'time'"
+        >
+          *{{ _getErrors.message }}
+        </p>
+      </div>
+      <!-- // ! Done:Bad practice: No loading states or error handling -->
+      <button
+        class="flex justify-center items-center my-3 p-2 rounded-md min-w-76 bg-green-500 text-white hover:bg-green-700"
+        @click="onSubmit"
+        :disabled="isLoading || (!this.date && !this.time)"
+      >
+        <LoaderCircle
+          class="animate-spin"
+          :size="22"
+          :stroke-width="2"
+          v-if="isLoading"
+        />
+        <span v-else>Kaydet</span>
+      </button>
+    </div>
+
+    <!-- // Bad practice: No pagination or filtering -->
+    <div
+      class="flex flex-col gap-3 w-full justify-start border border-slate-300 rounded-lg p-3"
+    >
+      <h2 class="text-xl font-bold">Kayıtlı Randevularım :</h2>
+      <div
+        class="grid grid-cols-2 gap-1"
+        v-if="_getAppointments && _getAppointments.length > 0"
+      >
+        <div
+          class="w-fit px-3 py-1 rounded-md bg-green-300 text-gray-700"
+          v-for="appointment in _getAppointments"
+          :key="appointment.id"
+        >
+          {{
+            new Date(
+              [appointment.date, appointment.time].join(",")
+            ).toLocaleString("tr-TR")
+          }}
+        </div>
+      </div>
+      <p
+        class="text-xs font-semibold rounded-md bg-red-500 text-white p-2"
+        v-else
+      >
+        Randevu bulunamadı...
+      </p>
     </div>
   </div>
 </template>

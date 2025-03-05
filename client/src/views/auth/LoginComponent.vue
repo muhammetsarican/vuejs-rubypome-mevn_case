@@ -1,55 +1,53 @@
 <template>
-  <div class="p-20 bg-slate-100 h-dvh flex justify-center items-center">
-    <!-- // ! Done:Bad practice: Inline styles everywhere -->
-    <div
-      class="bg-white p-7 w-fit h-fit shadow-2xl rounded-xl flex flex-col items-center gap-5"
-    >
-      <h1 class="text-3xl font-bold px-5 py-3">Oturum Aç</h1>
+  <!-- // ! Done:Bad practice: Inline styles everywhere -->
+  <div
+    class="bg-white p-7 w-fit h-fit shadow-2xl rounded-xl flex flex-col items-center gap-5"
+  >
+    <h1 class="text-3xl font-bold px-5 py-3">Oturum Aç</h1>
 
-      <!-- // ! Done:Bad practice: No form validation -->
-      <div class="flex flex-col gap-3 p-3">
-        <div>
-          <input
-            class="border p-2 rounded-md min-w-76 text-sm outline-none"
-            v-model="mail"
-            placeholder="E-posta adresiniz"
-          />
-          <p
-            class="text-xs px-2 text-red-500 font-light"
-            v-if="_getErrors && _getErrors.label === 'mail'"
-          >
-            *{{ _getErrors.message }}
-          </p>
-        </div>
-        <div>
-          <input
-            class="border p-2 rounded-md min-w-76 text-sm outline-none"
-            v-model="password"
-            type="password"
-            placeholder="Şifreniz"
-          />
-          <p
-            class="text-xs px-2 text-red-500 font-light"
-            v-if="_getErrors && _getErrors.label === 'password'"
-          >
-            *{{ _getErrors.message }}
-          </p>
-        </div>
-        <!-- // ! Done: Bad practice: No loading states or error handling -->
-        <button
-          class="flex justify-center items-center my-3 p-2 rounded-md min-w-76 bg-green-500 text-white hover:bg-green-700"
-          @click="onSubmit"
-          :disabled="isLoading || (!this.mail && !this.password)"
+    <!-- // ! Done:Bad practice: No form validation -->
+    <div class="flex flex-col gap-3 p-3">
+      <div>
+        <input
+          class="border p-2 rounded-md min-w-76 text-sm outline-none"
+          v-model="mail"
+          placeholder="E-posta adresiniz"
+        />
+        <p
+          class="text-xs px-2 text-red-500 font-light"
+          v-if="_getErrors && _getErrors.label === 'mail'"
         >
-          <LoaderCircle
-            class="animate-spin"
-            :size="24"
-            :stroke-width="2"
-            v-if="isLoading"
-          />
-          <span v-else>Oturum Aç</span>
-        </button>
+          *{{ _getErrors.message }}
+        </p>
       </div>
+      <div>
+        <input
+          class="border p-2 rounded-md min-w-76 text-sm outline-none"
+          v-model="password"
+          type="password"
+          placeholder="Şifreniz"
+        />
+        <p
+          class="text-xs px-2 text-red-500 font-light"
+          v-if="_getErrors && _getErrors.label === 'password'"
+        >
+          *{{ _getErrors.message }}
+        </p>
+      </div>
+      <!-- // ! Done: Bad practice: No loading states or error handling -->
+      <button
+        class="flex justify-center items-center my-3 p-2 rounded-md min-w-76 bg-green-500 text-white hover:bg-green-700"
+        @click="onSubmit"
+        :disabled="isLoading || (!this.mail && !this.password)"
+      >
+        <LoaderCircle
+          class="animate-spin"
+          :size="24"
+          :stroke-width="2"
+          v-if="isLoading"
+        />
+        <span v-else>Oturum Aç</span>
+      </button>
     </div>
   </div>
 </template>
