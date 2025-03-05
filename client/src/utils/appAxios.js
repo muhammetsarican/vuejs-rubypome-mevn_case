@@ -2,8 +2,13 @@ import axios from "axios";
 
 class AppAxios {
     constructor() {
+        const SERVER_HOST = import.meta.env.VITE_SERVER_HOST;
+        const SERVER_PORT = import.meta.env.VITE_SERVER_PORT;
+
+        const baseURL = `http://${SERVER_HOST}:${SERVER_PORT}/api`;
+
         this.request = axios.create({
-            baseURL: "http://localhost:4040/api",
+            baseURL,
             withCredentials: true,
             headers: {
                 "Content-Type": "application/json",
