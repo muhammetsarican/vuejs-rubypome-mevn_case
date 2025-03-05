@@ -5,7 +5,8 @@ class AppAxios {
         const SERVER_HOST = import.meta.env.VITE_SERVER_HOST;
         const SERVER_PORT = import.meta.env.VITE_SERVER_PORT;
 
-        const baseURL = `http://${SERVER_HOST}:${SERVER_PORT}/api`;
+        // const baseURL = `http://${SERVER_HOST}:${SERVER_PORT}/api`;
+        const baseURL = "/api";
 
         this.request = axios.create({
             baseURL,
