@@ -1,4 +1,7 @@
 # ⏰ MEVN Appointment Site
+ I created an appointment site with vuejs, mongodb,expressjs and nodejs for job application. I started with creating a docker container for mongodb, then I started to server side. I have knowledge about how to create backed with express, so I created base routes, services, controllers, at this part I got help from my previous project. Then I created models and validations, by the way I installed necessary libs. Secondly, I started to create special routes for user and appointment collections. In this part, I was asked to write a method that prevents Race Condition, but I have only theoretical information about this, so I got help from chat gpt when working on but I didn't copy it. Later, I cloned fronted from case repository and I started working on. I created router structure, then created login and register views. When I was creating them I added vuex to app and configured it. Later, I activated the pages, I added axios for fetch queries, added lucide vue for icons, for styling added tailwindcss, added cryptojs for hashing and joi for validations. I deployed it on my vps host, I was forced at this part. 
+ 
+ **At final, you can inspect the project on [this link](https://rubypome.farmrein.com/).**
 
 ## 🔥 Used Techs:
 - **General**:
@@ -32,6 +35,11 @@
 - Users can show only own appointments 
 - Client and server side both has validations
 
+
+## 🔢 Environment Variables
+
+To run this project you will need to add variables to the environment files under the base directory and the server directory. If you check you will see '*.env.example*' files. After editing these files, don't forget to change the name to '*.env*'.
+
 ## 🚀 Run Locally
 
 Clone the project
@@ -46,25 +54,39 @@ Go to the project directory
   cd vuejs-rubypome-mevn_case/
 ```
 
-#### ***Firstly: convert all .env.example files to .env files under client and server folders, fill them your own choices.***
-#### ***Now: run db with docker.***
-
-For run the db you can use one of these
+#### ***For run the whole up  with docker, use one these.***
 
 ```bash
-  docker-compose up -d
+  docker compose up -d
 ```
 
 ```bash
-  docker-compose up --fetch
+  docker compose up --fetch
 ```
 
 ```bash
-  docker-compose up --fetch -d
+  docker compose up --fetch -d
 ```
 
 ```bash
-  docker-compose up --build -d
+  docker compose up --build -d
+```
+
+#### Then, open your browser and visit the URL at below:
+```bash
+  http://localhost:8001
+```
+#### Congratulations 🎉
+
+#### ***If you want to run app step by step, follow next steps.***
+#### ***First: run db***
+Run docker service
+```bash
+  docker compose up mongo
+```
+For hide logs
+```bash
+  docker compose up mongo -d
 ```
 
 #### ***Then: run server.***
@@ -87,6 +109,8 @@ Run server
   npm run dev
 ```
 
+#### ***Lastly: run client.***
+
 Go to client directory
 
 ```bash
@@ -105,53 +129,50 @@ Run server
   npm run dev
 ```
 
-#### Now, you can send requests to 4040 port and you can show ui from 5173 port, Congratulations 🎉
+#### Now, you can visit the URL at below:
+```bash
+  http://localhost:5173
+```
 
-## 🌲 File Structure
+#### Congratulations 🎉
+
+## 🌲 Folder Structure
 
 ```bash
 Rubypome/
-├─ .gitignore
-├─ README.md
 ├─ client/
-│  ├─ .env.example
-│  ├─ .gitignore
-│  ├─ README.md
-│  ├─ index.html
-│  ├─ jsconfig.json
-│  ├─ package.json
 │  ├─ src/
-│  │  ├─ App.vue
 │  │  ├─ assets/
-│  │  ├─ main.js
-│  │  ├─ router.js
+│  │  │  └─ css/
 │  │  ├─ store/
 │  │  ├─ utils/
 │  │  └─ views/
-│  └─ vite.config.js
-├─ compose.yml
+│  │     └─ auth/
+├─ nginx/
 └─ server/
-   ├─ .env.example
-   ├─ package.json
    └─ src/
-      ├─ app.js
       ├─ config/
       ├─ controllers/
+      │  ├─ auth/
+      │  └─ main/
       ├─ helpers/
       ├─ loaders/
       ├─ middlewares/
       ├─ models/
+      │  ├─ auth/
+      │  └─ main/
       ├─ routes/
+      │  ├─ auth/
+      │  └─ main/
       ├─ services/
+      │  ├─ auth/
+      │  └─ main/
       ├─ utils/
       └─ validations/
+         ├─ auth/
+         └─ main/
 ```
 
 ## 🖋️ Authors
 
 - [@muhammetsarican](https://www.github.com/muhammetsarican)
-
-<!-- 
-    edit compose.yml as it can run the whole application
-    edit readme with your final thaughts
- -->
